@@ -16,30 +16,31 @@ We use the provide Dog Breed Dataset to use as data for the training jobs.
 Upload the data to an S3 bucket through the AWS Gateway so that SageMaker has access to the data. 
 
 ## Hyperparameter Tuning
-I used Resnet34 pretrained model and 2 fully connected layers to classify the breeds of dogs.
+I used Resnet34 pretrained model and 3 fully connected layers to classify the breeds of dogs.
 The hyperparameter searchspaces are learning-rate and batchsize.
-Deploy a hyperparameter tuning job on sagemaker and take the best job's hyperparameter to train the last model.
+Deploy a hyperparameter tuning job on sagemaker and wait for the combination of hyperparameters turn out with best metric.
 
 ![hyperparameter tuning job](https://github.com/htinaunglu/DogBreed-Classification-With-Amazon-Sagemaker/blob/main/images/hpo-job.png)
 
+And pick the hyperparameters from the best training job to train the vfinal model.
 ![best job's hyperparameters](https://github.com/htinaunglu/DogBreed-Classification-With-Amazon-Sagemaker/blob/main/images/best-training-job.png)
 
 
 ## Debugging and Profiling
-Profiling report is in the repo with HTML file
+Profiling report is in the repo with PDF file.
 
 ### Results
-Low GPU Utilization & Loss alaways increasing. Can't get right even after over 100 time re-coding and tuning with different hyperparameters and different instances.
-
-Prfiling report is in the repo as HTML file.
+Result is pretty good, as I was using ml.g4dn.xlarge to utilize the GPU of the instance, both the hpo jobs and training job did't take too much time.
 
 
 ## Model Deployment
-Model was deployed on the ml.g4dn.xlarge instance with best result. To quary, we need to transform the input image via cropping, and normalizing before pass it to the endpoint as a numpyarray.
+Model was deployed on the ml.g4dn.xlarge instance with best result. First version of my deployment didn't work, so I need to add new inference script call ![endpoint.py](https://github.com/htinaunglu/DogBreed-Classification-With-Amazon-Sagemaker/blob/main/endpoint.py) to set up and deploy a working endpoint.
 
 ![deployed endpoint](https://github.com/htinaunglu/DogBreed-Classification-With-Amazon-Sagemaker/blob/main/images/active-endpoint.png)
 
-## Problems
-There are mainly two problem in my workflow.
-1. I can't get the hook data it always show the size(len) as always 1, included in the notebook output. So I can't plot as there is no enough data, I have tried over 6 days to solve this, and I decided to submit the project AS IT, so that I can get valuable corrections from the reviewers.
-2. The sagemaker endpoint always show >Received server error (0)< whenever I try to pass image data to it.
+The quarying result is shown in the notebook and here is the cloudwatch log of the inference.
+![Cloudwatch Log](https://github.com/htinaunglu/DogBreed-Classification-With-Amazon-Sagemaker/blob/main/images/endpoint-cloudwatch-log.png)
+
+## Using the Endpoint
+To use the endpoint, just pass a local image of dog, or the address of the jpg image to the endpoint. Every processing job is done in the inference script and user can enjoy the result easily.
+
