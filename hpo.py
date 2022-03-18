@@ -1,5 +1,5 @@
-#TODO: Import your dependencies.
-#For instance, below are some dependencies you might need if you are using Pytorch
+#!/usr/bin/env python
+# coding: utf-8
 import numpy as np
 import torch
 import torch.nn as nn

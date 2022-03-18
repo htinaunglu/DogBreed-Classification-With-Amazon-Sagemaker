@@ -1,5 +1,5 @@
-#TODO: Import your dependencies.
-#For instance, below are some dependencies you might need if you are using Pytorch
+#!/usr/bin/env python
+# coding: utf-8
 import numpy as np
 import torch
 import torch.nn as nn
@@ -42,7 +42,7 @@ def test(model, test_loader, loss_criterion, device, hook):
     total_acc = running_corrects.double() // len(test_loader)
     
     logger.info(
-        "\nTest set: Average loss: {:.4f}, Accuracy: {}\n".format(
+        "\nTest set: Average Test Loss: {:.4f}, Accuracy: {}\n".format(
             total_loss, total_acc)
         )
     
@@ -50,7 +50,7 @@ def test(model, test_loader, loss_criterion, device, hook):
 def train(model, train_loader, validation_loader, loss_criterion, optimizer, device, hook):
     loss_counter=0
     best_loss=1e6
-    epochs = 50
+    epochs = 40
     hook.set_mode(smd.modes.TRAIN) # set debugging hook
     image_dataset={'train':train_loader, 'valid':validation_loader}
     
@@ -90,7 +90,7 @@ def train(model, train_loader, validation_loader, loss_criterion, optimizer, dev
                 else:
                     loss_counter+=1
             
-            logger.info('{} loss: {:.4f}, acc: {:.4f}, best loss: {:.4f}'.format(phase,
+            logger.info('{} Train Loss: {:.4f}, acc: {:.4f}, best loss: {:.4f}'.format(phase,
                                                                                  epoch_loss,
                                                                                  epoch_acc,
                                                                                  best_loss))
